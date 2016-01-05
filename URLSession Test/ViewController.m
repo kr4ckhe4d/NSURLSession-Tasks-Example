@@ -9,14 +9,15 @@
 #import "ViewController.h"
 
 @interface ViewController ()
+@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @end
-
+NSURLSessionDownloadTask *getImageTask;
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self.progressView setProgress:0 animated:YES];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -28,21 +29,12 @@
     //Getting the Image and viewing it on the Image View
     NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
     
-    NSString *imageURL = @"https://pbs.twimg.com/profile_images/638751551457103872/KN-NzuRl.png";
+    NSString *imageURL = @"https://2.bp.blogspot.com/-kptChpiuaf0/VeSjz-zMUzI/AAAAAAAAAxE/REIiZ4qVI2s/s1600/150824_GoogleBlog_Share.png";
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig
                                                           delegate:self delegateQueue:nil];
     
-    NSURLSessionDownloadTask *getImageTask = [session downloadTaskWithURL:[NSURL URLWithString:imageURL] completionHandler:^(NSURL *location,
-                                                                                                                             NSURLResponse *response,
-                                                                                                                             NSError *error){
-        UIImage *downloadedImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:location]];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _imageView.image = downloadedImage;
-
-        });
-    }];
+    getImageTask = [session downloadTaskWithURL:[NSURL URLWithString:imageURL]];
     
     [getImageTask resume];
     
@@ -62,6 +54,29 @@
      }]resume];
      
     
+}
+
+//Image download Completion Handler
+-(void)URLSession:(NSURLSession *)session
+     downloadTask:(NSURLSessionDownloadTask *)downloadTask
+didFinishDownloadingToURL:(NSURL *)location
+{
+    // use code above from completion handler
+    UIImage *downloadedImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:location]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _imageView.image = downloadedImage;
+    }
+                   );
+    
+}
+
+//Image Download Progress bar
+-(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
+        float progress = (double)totalBytesWritten / (double)totalBytesExpectedToWrite;
+    
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.progressView setProgress:progress];
+        });
 }
 
 @end

@@ -37,6 +37,10 @@
                                     <action selector="fetchImage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Y8R-yB-2iJ"/>
                                 </connections>
                             </button>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="H8p-xX-AX5">
+                                <rect key="frame" x="20" y="367" width="280" height="2"/>
+                                <animations/>
+                            </progressView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -44,6 +48,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="imageView" destination="HYu-Fu-PNZ" id="XBh-77-jYx"/>
+                        <outlet property="progressView" destination="H8p-xX-AX5" id="W2S-B7-kVj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
